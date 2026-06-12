@@ -15,21 +15,21 @@ app.use(express.json());
 const createToken = (user) => jwt.sign({ id: user.id, email: user.email, name: user.name }, jwtSecret, { expiresIn: '7d' });
 
 app.get('/api/health', (_request, response) => {
-  response.json({ ok: true, service: 'gamehaton-backend' });
+  response.json({ ok: true, service: 'gamehaton-backend', message: 'Server işləyir' });
 });
 
 app.post('/api/auth/register', async (request, response) => {
   const { name, email, password } = request.body ?? {};
 
   if (!name || !email || !password) {
-    return response.status(400).json({ message: 'Name, email and password are required' });
+    return response.status(400).json({ message: 'Ad, e-poçt və şifrə tələb olunur' });
   }
 
   const normalizedEmail = String(email).trim().toLowerCase();
   const existingUser = users.find((user) => user.email === normalizedEmail);
 
   if (existingUser) {
-    return response.status(409).json({ message: 'User already exists' });
+    return response.status(409).json({ message: 'İstifadəçi artıq mövcuddur' });
   }
 
   const hashedPassword = await bcrypt.hash(String(password), 10);
@@ -44,7 +44,7 @@ app.post('/api/auth/register', async (request, response) => {
   const token = createToken(user);
 
   return response.status(201).json({
-    message: 'Account created successfully',
+    message: 'Hesab uğurla yaradıldı',
     token,
     user: { id: user.id, name: user.name, email: user.email }
   });
@@ -54,24 +54,24 @@ app.post('/api/auth/login', async (request, response) => {
   const { email, password } = request.body ?? {};
 
   if (!email || !password) {
-    return response.status(400).json({ message: 'Email and password are required' });
+    return response.status(400).json({ message: 'E-poçt və şifrə tələb olunur' });
   }
 
   const normalizedEmail = String(email).trim().toLowerCase();
   const user = users.find((currentUser) => currentUser.email === normalizedEmail);
 
   if (!user) {
-    return response.status(401).json({ message: 'Invalid credentials' });
+    return response.status(401).json({ message: 'Yanlış məlumatlar' });
   }
 
   const passwordMatches = await bcrypt.compare(String(password), user.password);
   if (!passwordMatches) {
-    return response.status(401).json({ message: 'Invalid credentials' });
+    return response.status(401).json({ message: 'Yanlış məlumatlar' });
   }
 
   const token = createToken(user);
   return response.json({
-    message: 'Login successful',
+    message: 'Giriş uğurludur',
     token,
     user: { id: user.id, name: user.name, email: user.email }
   });

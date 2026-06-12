@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import Reveal from '../components/Reveal';
 
 const apiBaseUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
 
@@ -16,7 +18,7 @@ function AuthPage() {
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setStatus({ type: 'loading', message: 'Submitting...' });
+    setStatus({ type: 'loading', message: 'Göndərilir...' });
 
     const payload =
       mode === 'register'
@@ -33,7 +35,7 @@ function AuthPage() {
       const data = (await response.json()) as { message?: string; token?: string; user?: { name?: string; email?: string } };
 
       if (!response.ok) {
-        throw new Error(data.message ?? 'Request failed');
+        throw new Error(data.message ?? 'Sorğu uğursuz oldu');
       }
 
       if (data.token) {
@@ -43,104 +45,108 @@ function AuthPage() {
         localStorage.setItem('gamehaton_user', JSON.stringify(data.user));
       }
 
-      setStatus({ type: 'success', message: data.message ?? 'Success' });
+      setStatus({ type: 'success', message: data.message ?? 'Uğurla tamamlandı' });
       navigate('/');
     } catch (error) {
       setStatus({
         type: 'error',
-        message: error instanceof Error ? error.message : 'Unexpected error'
+        message: error instanceof Error ? error.message : 'Gözlənilməz xəta'
       });
     }
   };
 
   return (
-    <section className="px-4 py-14 sm:px-6 lg:px-10">
+    <section className="px-4 py-8 sm:px-6 lg:px-10 lg:py-12">
       <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
-        <div className="rounded-[2rem] border border-white/10 bg-white/5 p-8 backdrop-blur-md">
-          <p className="text-sm uppercase tracking-[0.3em] text-white/45">{mode}</p>
-          <h1 className="mt-4 text-4xl font-black tracking-tight sm:text-5xl">
-            {mode === 'register' ? 'Create your account' : 'Welcome back'}
-          </h1>
-          <p className="mt-4 max-w-xl leading-7 text-white/70">
-            Login və register sistemi backend API ilə bağlıdır. Bu form hazırda local backend-ə sorğu göndərir və istifadəçini əsas səhifəyə qaytarır.
-          </p>
-          <div className="mt-8 rounded-3xl bg-gradient-to-br from-[#A6C8FF]/20 via-[#7C5CFF]/20 to-[#FF9FFC]/20 p-5">
-            <p className="text-sm text-white/65">Connected flow</p>
-            <p className="mt-2 text-lg font-semibold leading-7">
-              An account lets you save a token, keep profile data, and extend the platform later with saved libraries.
+        <Reveal>
+          <motion.div whileHover={{ y: -6 }} className="rounded-[2rem] border border-white/10 bg-white/5 p-8 backdrop-blur-md">
+            <p className="text-sm uppercase tracking-[0.3em] text-white/45">{mode === 'register' ? 'QEYDİYYAT' : 'GİRİŞ'}</p>
+            <h1 className="mt-4 text-4xl font-black tracking-tight sm:text-5xl">
+              {mode === 'register' ? 'Hesab yaradın' : 'Xoş gəldiniz'}
+            </h1>
+            <p className="mt-4 max-w-xl leading-7 text-white/70">
+              Giriş və qeydiyyat sistemi backend API ilə bağlıdır. Bu forma məlumatı serverə göndərir və uğurlu olduqda sizi əsas səhifəyə qaytarır.
             </p>
-          </div>
-        </div>
+            <div className="mt-8 rounded-3xl bg-gradient-to-br from-[#A6C8FF]/20 via-[#7C5CFF]/20 to-[#FF9FFC]/20 p-5">
+              <p className="text-sm text-white/65">Bağlı axın</p>
+              <p className="mt-2 text-lg font-semibold leading-7">
+                Hesab sizə token saxlamağa, profil məlumatını qorumağa və gələcəkdə kitabxananı yadda saxlamağa kömək edəcək.
+              </p>
+            </div>
+          </motion.div>
+        </Reveal>
 
-        <div className="rounded-[2rem] border border-white/10 bg-[#0b1022]/90 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl sm:p-8">
-          <form className="space-y-5" onSubmit={submit}>
-            {mode === 'register' && (
+        <Reveal delay={0.08}>
+          <motion.div whileHover={{ y: -6 }} className="rounded-[2rem] border border-white/10 bg-[#0b1022]/90 p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl sm:p-8">
+            <form className="space-y-5" onSubmit={submit}>
+              {mode === 'register' && (
+                <label className="block">
+                  <span className="mb-2 block text-sm text-white/70">Ad</span>
+                  <input
+                    className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 outline-none ring-0 placeholder:text-white/30 focus:border-white/30"
+                    value={form.name}
+                    onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
+                    placeholder="Adınız"
+                    required
+                  />
+                </label>
+              )}
+
               <label className="block">
-                <span className="mb-2 block text-sm text-white/70">Name</span>
+                <span className="mb-2 block text-sm text-white/70">E-poçt</span>
                 <input
+                  type="email"
                   className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 outline-none ring-0 placeholder:text-white/30 focus:border-white/30"
-                  value={form.name}
-                  onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
-                  placeholder="Your name"
+                  value={form.email}
+                  onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
+                  placeholder="siz@example.com"
                   required
                 />
               </label>
-            )}
 
-            <label className="block">
-              <span className="mb-2 block text-sm text-white/70">Email</span>
-              <input
-                type="email"
-                className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 outline-none ring-0 placeholder:text-white/30 focus:border-white/30"
-                value={form.email}
-                onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
-                placeholder="you@example.com"
-                required
-              />
-            </label>
+              <label className="block">
+                <span className="mb-2 block text-sm text-white/70">Şifrə</span>
+                <input
+                  type="password"
+                  className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 outline-none ring-0 placeholder:text-white/30 focus:border-white/30"
+                  value={form.password}
+                  onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
+                  placeholder="••••••••"
+                  required
+                  minLength={6}
+                />
+              </label>
 
-            <label className="block">
-              <span className="mb-2 block text-sm text-white/70">Password</span>
-              <input
-                type="password"
-                className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 outline-none ring-0 placeholder:text-white/30 focus:border-white/30"
-                value={form.password}
-                onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
-                placeholder="••••••••"
-                required
-                minLength={6}
-              />
-            </label>
+              {status.message && (
+                <div
+                  className={`rounded-2xl border px-4 py-3 text-sm ${
+                    status.type === 'error'
+                      ? 'border-red-400/30 bg-red-500/10 text-red-100'
+                      : status.type === 'success'
+                        ? 'border-emerald-400/30 bg-emerald-500/10 text-emerald-100'
+                        : 'border-white/10 bg-white/5 text-white/70'
+                  }`}
+                >
+                  {status.message}
+                </div>
+              )}
 
-            {status.message && (
-              <div
-                className={`rounded-2xl border px-4 py-3 text-sm ${
-                  status.type === 'error'
-                    ? 'border-red-400/30 bg-red-500/10 text-red-100'
-                    : status.type === 'success'
-                      ? 'border-emerald-400/30 bg-emerald-500/10 text-emerald-100'
-                      : 'border-white/10 bg-white/5 text-white/70'
-                }`}
+              <button
+                type="submit"
+                className="w-full rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#050816] transition-all hover:-translate-y-1 hover:shadow-xl"
               >
-                {status.message}
-              </div>
-            )}
+                {mode === 'register' ? 'Hesab yarat' : 'Giriş et'}
+              </button>
 
-            <button
-              type="submit"
-              className="w-full rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#050816] transition-transform hover:-translate-y-0.5"
-            >
-              {mode === 'register' ? 'Create account' : 'Login'}
-            </button>
-
-            <p className="text-center text-sm text-white/60">
-              {mode === 'register' ? 'Already have an account?' : 'Need an account?'}{' '}
-              <Link className="font-semibold text-white underline-offset-4 hover:underline" to={mode === 'register' ? '/login' : '/register'}>
-                {mode === 'register' ? 'Login' : 'Register'}
-              </Link>
-            </p>
-          </form>
-        </div>
+              <p className="text-center text-sm text-white/60">
+                {mode === 'register' ? 'Artıq hesabınız var?' : 'Hesabınız yoxdur?'}{' '}
+                <Link className="font-semibold text-white underline-offset-4 hover:underline" to={mode === 'register' ? '/login' : '/register'}>
+                  {mode === 'register' ? 'Giriş et' : 'Qeydiyyat'}
+                </Link>
+              </p>
+            </form>
+          </motion.div>
+        </Reveal>
       </div>
     </section>
   );
