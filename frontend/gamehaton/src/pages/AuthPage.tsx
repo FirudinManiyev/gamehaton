@@ -83,7 +83,7 @@ function AuthPage() {
                 <label className="block">
                   <span className="mb-2 block text-sm text-white/70">Ad</span>
                   <input
-                    className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 outline-none ring-0 placeholder:text-white/30 focus:border-white/30"
+                    className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-white outline-none ring-0 placeholder:text-white/40 focus:border-white/30"
                     value={form.name}
                     onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
                     placeholder="Adınız"
@@ -96,7 +96,7 @@ function AuthPage() {
                 <span className="mb-2 block text-sm text-white/70">E-poçt</span>
                 <input
                   type="email"
-                  className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 outline-none ring-0 placeholder:text-white/30 focus:border-white/30"
+                  className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-white outline-none ring-0 placeholder:text-white/40 focus:border-white/30"
                   value={form.email}
                   onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
                   placeholder="siz@example.com"
@@ -108,7 +108,7 @@ function AuthPage() {
                 <span className="mb-2 block text-sm text-white/70">Şifrə</span>
                 <input
                   type="password"
-                  className="w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 outline-none ring-0 placeholder:text-white/30 focus:border-white/30"
+                  className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-white outline-none ring-0 placeholder:text-white/40 focus:border-white/30"
                   value={form.password}
                   onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
                   placeholder="••••••••"
@@ -133,7 +133,7 @@ function AuthPage() {
 
               <button
                 type="submit"
-                className="w-full rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#050816] transition-all hover:-translate-y-1 hover:shadow-xl"
+                className="w-full rounded-full bg-gradient-to-r from-[#A6C8FF] to-[#7C5CFF] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/50"
               >
                 {mode === 'register' ? 'Hesab yarat' : 'Giriş et'}
               </button>

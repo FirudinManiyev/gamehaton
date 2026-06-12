@@ -6,7 +6,7 @@ import Footer from './Footer';
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   `rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-    isActive ? 'bg-white text-[#050816]' : 'text-white/75 hover:bg-white/10 hover:text-white'
+    isActive ? 'bg-white text-[#050816]' : 'text-white hover:bg-white/20 hover:text-white'
   }`;
 
 function Layout({ children }: { children: ReactNode }) {
@@ -60,7 +60,7 @@ function Layout({ children }: { children: ReactNode }) {
           </nav>
 
           <div className="flex items-center gap-2 md:hidden">
-            <Link to="/login" className="rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-white/80">
+            <Link to="/login" className="rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-white hover:bg-white/10 transition-colors">
               Giriş
             </Link>
           </div>
